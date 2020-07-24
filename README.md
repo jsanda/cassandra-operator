@@ -8,10 +8,12 @@ There are multiple operators for Cassandra. This project does not intend to dupl
 Here are some [design proposals](https://github.com/jsanda/cassandra-k8s-operator-sig/tree/master/design-proposals) that have been discussed during SIG meetings.
 
 # Communication
-**Slack**
+### Slack
+
 There is the `#cassandra-kubernetes` channel on the ASF slack. Go [here](https://s.apache.org/slack-invite) to create an account.
 
-**Mailing Lists**
+### Mailing Lists
+
 The Cassandra [dev mailing list](http://www.mail-archive.com/dev@cassandra.apache.org/) is also currently being used to broadcast information.
 
 # References
