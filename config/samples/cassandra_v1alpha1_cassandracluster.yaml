@@ -1,0 +1,7 @@
+apiVersion: cassandra.apache.org/v1alpha1
+kind: CassandraCluster
+metadata:
+  name: cassandracluster-sample
+spec:
+  # Add fields here
+  foo: bar

@@ -25,6 +25,9 @@ endif
 
 all: manager
 
+# The test target will fail without some additional setup that is not documented.define
+# See https://github.com/operator-framework/operator-sdk/pull/3517
+#
 # Run tests
 test: generate fmt vet manifests
 	go test ./... -coverprofile cover.out
