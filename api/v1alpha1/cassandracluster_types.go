@@ -23,6 +23,15 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+const (
+	// ClusterLabel is the operator's label for the cluster name
+	ClusterLabel        = "cassandra.apache.org/cluster"
+
+	ManagedByLabel      = "app.kubernetes.io/managed-by"
+
+	ManagedByLabelValue = "cassandra-operator"
+)
+
 type Rack struct {
 	Name string `json:"name,omitempty"`
 }
@@ -70,6 +79,25 @@ type CassandraClusterList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []CassandraCluster `json:"items"`
+}
+
+func (c *CassandraCluster) GetClusterLabels() map[string]string {
+	return map[string]string{
+		ClusterLabel: c.Spec.Name,
+	}
+}
+
+func (c *CassandraCluster) GetAllPodsServiceName() string {
+	return c.Spec.Name + "-all-pods-service"
+}
+
+func AddManagedByLabel(m map[string]string) {
+	m[ManagedByLabel] = ManagedByLabelValue
+}
+
+func HasManagedByCassandraOperatorLabel(m map[string]string) bool {
+	v, ok := m[ManagedByLabel]
+	return ok && v == ManagedByLabelValue
 }
 
 func init() {
