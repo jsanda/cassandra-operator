@@ -17,7 +17,11 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"encoding/json"
+	"github.com/Jeffail/gabs"
+	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	serverconfig "github.com/datastax/cass-operator/operator/pkg/serverconfig"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -111,6 +115,37 @@ func HasManagedByCassandraOperatorLabel(m map[string]string) bool {
 
 func (c *CassandraCluster) GetConfigBuilderImage() string {
 	return defaultConfigBuilderImage
+}
+
+// GetConfigAsJSON gets a JSON-encoded string suitable for passing to configBuilder
+func (c *CassandraCluster) GetConfigAsJSON() (string, error) {
+	// We use the cluster seed-service name here for the seed list as it will
+	// resolve to the seed nodes. This obviates the need to update the
+	// cassandra.yaml whenever the seed nodes change.
+	seeds := []string{c.GetSeedsServiceName()}
+
+	//cql := 0
+	//cqlSSL := 0
+	//broadcast := 0
+	//broadcastSSL := 0
+
+	modelValues := serverconfig.GetModelValues(seeds, c.Spec.Name, c.Spec.Name,)
+
+	var modelBytes []byte
+
+	modelBytes, err := json.Marshal(modelValues)
+	if err != nil {
+		return "", err
+	}
+
+	// Combine the model values with the user-specified values
+
+	modelParsed, err := gabs.ParseJSON([]byte(modelBytes))
+	if err != nil {
+		return "", errors.Wrap(err, "Model information for CassandraCluster resource was not properly configured")
+	}
+
+	return modelParsed.String(), nil
 }
 
 func init() {
