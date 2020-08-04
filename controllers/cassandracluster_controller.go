@@ -19,17 +19,17 @@ package controllers
 import (
 	"context"
 	api "github.com/jsanda/cassandra-operator/api/v1alpha1"
-	"github.com/jsanda/cassandra-operator/pkg/result"
 	"github.com/jsanda/cassandra-operator/pkg/reconciliation"
+	"github.com/jsanda/cassandra-operator/pkg/result"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	"github.com/go-logr/logr"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	corev1 "k8s.io/api/core/v1"
 )
 
 // CassandraClusterReconciler reconciles a CassandraCluster object
@@ -45,8 +45,8 @@ func (r *CassandraClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-// +kubebuilder:rbac:groups=cassandra.apache.org,resources=cassandraclusters,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=cassandra.apache.org,resources=cassandraclusters/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=cassandra.apache.org,namespace="cassandra-operator",resources=cassandraclusters,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=cassandra.apache.org,namespace="cassandra-operator",resources=cassandraclusters/status,verbs=get;update;patch
 
 func (r *CassandraClusterReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()

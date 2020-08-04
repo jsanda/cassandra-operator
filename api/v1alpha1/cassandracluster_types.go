@@ -25,9 +25,9 @@ import (
 
 const (
 	// ClusterLabel is the operator's label for the cluster name
-	ClusterLabel        = "cassandra.apache.org/cluster"
+	ClusterLabel = "cassandra.apache.org/cluster"
 
-	ManagedByLabel      = "app.kubernetes.io/managed-by"
+	ManagedByLabel = "app.kubernetes.io/managed-by"
 
 	ManagedByLabelValue = "cassandra-operator"
 )

@@ -11,8 +11,29 @@ BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
 endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
+ORG?=jsanda
+PROJECT=cassandra-operator
+REG=docker.io
+SHELL=/bin/bash
+TAG?=latest
+PKG=github.com/jsanda/cassandra-operator
+
+BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+REV=$(shell git rev-parse --short=12 HEAD)
+
+IMAGE_BASE=$(REG)/$(ORG)/$(PROJECT)
+#PRE_TEST_TAG=$(BRANCH)-$(REV)-TEST
+#POST_TEST_TAG=$(BRANCH)-$(REV)
+#E2E_IMAGE?=$(IMAGE_BASE):$(PRE_TEST_TAG)
+#BRANCH_REV_IMAGE=$(IMAGE_BASE):$(POST_TEST_TAG)
+REV_IMAGE=$(IMAGE_BASE):$(REV)
+#BRANCH_LATEST_IMAGE=$(IMAGE_BASE):$(BRANCH)-latest
+LATEST_IMAGE=$(IMAGE_BASE):latest
+
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+#IMG ?= controller:latest
+IMG ?= $(REV_IMAGE)
+
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
 
@@ -70,8 +91,9 @@ generate: controller-gen
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 # Build the docker image
-docker-build: test
+docker-build: #test
 	docker build . -t ${IMG}
+	docker tag ${IMG} ${LATEST_IMAGE}
 
 # Push the docker image
 docker-push:
