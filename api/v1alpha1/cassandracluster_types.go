@@ -30,6 +30,11 @@ const (
 	ManagedByLabel = "app.kubernetes.io/managed-by"
 
 	ManagedByLabelValue = "cassandra-operator"
+
+	// SeedNodeLabel is the operator's label for the seed node state
+	SeedNodeLabel = "cassandra.apache.org/seed-node"
+
+	defaultConfigBuilderImage = "datastax/cass-config-builder:1.0.1"
 )
 
 type Rack struct {
@@ -91,6 +96,10 @@ func (c *CassandraCluster) GetAllPodsServiceName() string {
 	return c.Spec.Name + "-all-pods-service"
 }
 
+func (c *CassandraCluster) GetSeedsServiceName() string {
+	return c.Spec.Name + "-seed-service"
+}
+
 func AddManagedByLabel(m map[string]string) {
 	m[ManagedByLabel] = ManagedByLabelValue
 }
@@ -98,6 +107,10 @@ func AddManagedByLabel(m map[string]string) {
 func HasManagedByCassandraOperatorLabel(m map[string]string) bool {
 	v, ok := m[ManagedByLabel]
 	return ok && v == ManagedByLabelValue
+}
+
+func (c *CassandraCluster) GetConfigBuilderImage() string {
+	return defaultConfigBuilderImage
 }
 
 func init() {

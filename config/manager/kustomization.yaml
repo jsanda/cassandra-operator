@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: docker.io/jsanda/cassandra-operator
-  newTag: 6b4f23517824
+  newTag: 4baeaebd3054

@@ -53,7 +53,6 @@ func (r *CassandraClusterReconciler) Reconcile(req ctrl.Request) (ctrl.Result, e
 	ctx := context.Background()
 	_ = r.Log.WithValues("cassandracluster", req.NamespacedName)
 
-	// your logic here
 	cluster := &api.CassandraCluster{}
 	err := r.Client.Get(ctx, req.NamespacedName, cluster)
 	if err != nil {
@@ -72,25 +71,37 @@ func (r *CassandraClusterReconciler) Reconcile(req ctrl.Request) (ctrl.Result, e
 }
 
 func (r *CassandraClusterReconciler) CheckHeadlessServices(cluster *api.CassandraCluster) result.ReconcileResult {
-	allPodsService := newAllPodsServiceForCassandraDatacenter(cluster)
+	allPodsService := newAllPodsServiceForCassandraCluster(cluster)
+	seedsService := newSeedsServiceForCassandraCluster(cluster)
 
-	err := controllerutil.SetControllerReference(cluster, allPodsService, r.Scheme)
-	if err != nil {
-		r.Log.Error(err, "could not set controller reference", "AllPodsService", allPodsService.Name)
-		return result.Error(err)
+	services := []*corev1.Service{seedsService, allPodsService}
+
+	for idx := range services {
+		desiredSvc := services[idx]
+
+		err := controllerutil.SetControllerReference(cluster, desiredSvc, r.Scheme)
+		if err != nil {
+			r.Log.Error(err, "could not set controller reference for headless desiredSvc", "Service", desiredSvc.Name)
+			return result.Error(err)
+		}
+
+		actualSvc := &corev1.Service{}
+		err = r.Get(context.TODO(), types.NamespacedName{Namespace: desiredSvc.Namespace, Name: desiredSvc.Name}, actualSvc)
+		if err != nil && errors.IsNotFound(err) {
+			if err = r.Create(context.TODO(), desiredSvc); err != nil {
+				r.Log.Error(err, "failed to create headless service", "Service", desiredSvc.Name)
+				return result.Error(err)
+			}
+		} else if err != nil {
+			r.Log.Error(err, "could not get headless service", "Service", desiredSvc.Name)
+			return result.Error(err)
+		} else {
+			// TODO Check to see if the service needs to be updated
+			return result.Continue()
+		}
 	}
 
-	svc := &corev1.Service{}
-	err = r.Get(context.TODO(), types.NamespacedName{Namespace: allPodsService.Namespace, Name: allPodsService.Name}, svc)
-	if err != nil && errors.IsNotFound(err) {
-		return r.CreateHeadlessService(allPodsService)
-	} else if err != nil {
-		r.Log.Error(err, "failed to get headless service", "AllPodsService", allPodsService.Name)
-		return result.Error(err)
-	} else {
-		// TODO Check to see if the service needs to be updated
-		return result.Continue()
-	}
+	return result.Continue()
 }
 
 func (r *CassandraClusterReconciler) CreateHeadlessService(svc *corev1.Service) result.ReconcileResult {
@@ -104,7 +115,31 @@ func (r *CassandraClusterReconciler) CreateHeadlessService(svc *corev1.Service) 
 	return result.Continue()
 }
 
-func newAllPodsServiceForCassandraDatacenter(cluster *api.CassandraCluster) *corev1.Service {
+func newSeedsServiceForCassandraCluster(cluster *api.CassandraCluster) *corev1.Service {
+	service := makeGenericHeadlessService(cluster)
+	service.ObjectMeta.Name = cluster.GetSeedsServiceName()
+
+	labels := cluster.GetClusterLabels()
+	service.ObjectMeta.Labels = labels
+
+	service.Spec.Selector = buildLabelSelectorForSeedService(cluster)
+	service.Spec.PublishNotReadyAddresses = true
+
+	reconciliation.AddHashAnnotation(service.ObjectMeta)
+
+	return service
+}
+
+func buildLabelSelectorForSeedService(cluster *api.CassandraCluster) map[string]string {
+	labels := cluster.GetClusterLabels()
+
+	// narrow selection to just the seed nodes
+	labels[api.SeedNodeLabel] = "true"
+
+	return labels
+}
+
+func newAllPodsServiceForCassandraCluster(cluster *api.CassandraCluster) *corev1.Service {
 	service := makeGenericHeadlessService(cluster)
 	service.ObjectMeta.Name = cluster.GetAllPodsServiceName()
 	service.Spec.PublishNotReadyAddresses = true
