@@ -55,7 +55,14 @@ func (r *requestHandler) HandleRequest(ctx context.Context) (reconcile.Result, e
 		}
 	}
 	r.cluster = cluster
-	r.CheckHeadlessServices(ctx)
+
+	if result := r.CheckHeadlessServices(ctx); result.Completed() {
+		return result.Output()
+	}
+
+	if result := r.CheckStatefulSet(ctx); result.Completed() {
+		return result.Output()
+	}
 
 	return reconcile.Result{}, nil
 }
