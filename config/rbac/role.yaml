@@ -8,6 +8,15 @@ metadata:
   namespace: cassandra-operator
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+- apiGroups:
   - cassandra.apache.org
   resources:
   - cassandraclusters

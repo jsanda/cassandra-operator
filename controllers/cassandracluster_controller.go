@@ -47,6 +47,7 @@ func (r *CassandraClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 // +kubebuilder:rbac:groups=cassandra.apache.org,namespace="cassandra-operator",resources=cassandraclusters,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=cassandra.apache.org,namespace="cassandra-operator",resources=cassandraclusters/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups="",namespace="cassandra-operator",resources=services,verbs=get;list;watch;create
 
 func (r *CassandraClusterReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
