@@ -149,7 +149,7 @@ func newDataVolumeClaimTemplate(pvcLabels map[string]string) corev1.PersistentVo
 	storageClassName := "server-storage"
 	pvc := corev1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   "data",
+			Name:   pvcName,
 			Labels: pvcLabels,
 		},
 		Spec: corev1.PersistentVolumeClaimSpec{

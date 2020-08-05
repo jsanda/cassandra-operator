@@ -17,6 +17,15 @@ rules:
   - list
   - watch
 - apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+- apiGroups:
   - cassandra.apache.org
   resources:
   - cassandraclusters
