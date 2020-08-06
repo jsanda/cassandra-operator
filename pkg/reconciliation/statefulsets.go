@@ -153,6 +153,8 @@ func buildContainers(cluster *api.CassandraCluster, serverVolumeMounts []corev1.
 		MountPath: "/var/lib/cassandra",
 	})
 	cassandraContainer.VolumeMounts = serverVolumeMounts
+	cassandraContainer.LivenessProbe = createCassandraProbe(api.DefaultLivenessProbeInitialDelay, api.DefaultLivenessProbePeriod, api.DefaultLivenessProbeTimeout)
+	cassandraContainer.ReadinessProbe = createCassandraProbe(api.DefaultReadinessProbeInitialDelay, api.DefaultReadinessProbePeriod, api.DefaultReadinessProbeTimeout)
 
 	return []corev1.Container{cassandraContainer}, nil
 }

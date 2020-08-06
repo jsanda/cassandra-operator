@@ -65,3 +65,20 @@ func createVolumes() []corev1.Volume {
 
 	return []corev1.Volume{serverConfig, serverLogs}
 }
+
+func createCassandraProbe(delay, period, timeout int32) *corev1.Probe {
+	return &corev1.Probe{
+		InitialDelaySeconds: delay,
+		TimeoutSeconds:      timeout,
+		PeriodSeconds:       period,
+		Handler: corev1.Handler{
+			Exec: &corev1.ExecAction{
+				Command: []string{
+					"/bin/bash",
+					"-c",
+					"nodetool status",
+				},
+			},
+		},
+	}
+}

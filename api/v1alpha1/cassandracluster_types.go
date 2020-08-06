@@ -19,9 +19,9 @@ package v1alpha1
 import (
 	"encoding/json"
 	"github.com/Jeffail/gabs"
+	"github.com/datastax/cass-operator/operator/pkg/serverconfig"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	serverconfig "github.com/datastax/cass-operator/operator/pkg/serverconfig"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -39,6 +39,14 @@ const (
 	SeedNodeLabel = "cassandra.apache.org/seed-node"
 
 	defaultConfigBuilderImage = "datastax/cass-config-builder:1.0.1"
+
+	DefaultLivenessProbeInitialDelay int32 = 120
+	DefaultLivenessProbeTimeout      int32 = 20
+	DefaultLivenessProbePeriod       int32 = 10
+
+	DefaultReadinessProbeInitialDelay int32 = 60
+	DefaultReadinessProbeTimeout      int32 = 10
+	DefaultReadinessProbePeriod       int32 = 10
 )
 
 type Rack struct {
