@@ -49,7 +49,7 @@ func newAllPodsServiceForCassandraCluster(cluster *api.CassandraCluster) *corev1
 	service.ObjectMeta.Name = cluster.GetAllPodsServiceName()
 	service.Spec.PublishNotReadyAddresses = true
 
-	AddHashAnnotation(service.ObjectMeta)
+	addHashAnnotation(service.ObjectMeta)
 
 	return service
 }
@@ -68,7 +68,7 @@ func newSeedsServiceForCassandraCluster(cluster *api.CassandraCluster) *corev1.S
 	//service.Spec.Selector = buildLabelSelectorForSeedService(cluster)
 	service.Spec.PublishNotReadyAddresses = true
 
-	AddHashAnnotation(service.ObjectMeta)
+	addHashAnnotation(service.ObjectMeta)
 
 	return service
 }
@@ -76,7 +76,9 @@ func newSeedsServiceForCassandraCluster(cluster *api.CassandraCluster) *corev1.S
 // makeGenericHeadlessService returns a fresh k8s headless (aka ClusterIP equals "None") Service
 // struct that has the same namespace as the CassandraDatacenter argument, and proper labels for the DC.
 // The caller needs to fill in the ObjectMeta.Name value, at a minimum, before it can be created
-// inside the k8s cluster. This is copied from http://github.com/jsanda/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L179-L179
+// inside the k8s cluster.
+//
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L179-L179
 func makeGenericHeadlessService(cluster *api.CassandraCluster) *corev1.Service {
 	labels := cluster.GetClusterLabels()
 	api.AddManagedByLabel(labels)

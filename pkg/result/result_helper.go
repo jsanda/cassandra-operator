@@ -1,6 +1,6 @@
 package result
 
-// This file is a direct copy of http://github.com/jsanda/cass-operator/blob/master/operator/internal/result/result_helper.go
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/internal/result/result_helper.go
 
 import (
 	"time"

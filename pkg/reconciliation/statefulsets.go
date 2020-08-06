@@ -46,6 +46,7 @@ func (r *requestHandler) CheckStatefulSet(ctx context.Context) result.ReconcileR
 	return result.Done()
 }
 
+// Source: http://github.com/jsanda/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L192-L192
 func newNamespacedNameForStatefulSet(cluster *api.CassandraCluster, dcName string, rackName string) types.NamespacedName {
 	name := cluster.Spec.Name + "-" + dcName + "-" + rackName + "-sts"
 	ns := cluster.Namespace
@@ -53,6 +54,7 @@ func newNamespacedNameForStatefulSet(cluster *api.CassandraCluster, dcName strin
 	return types.NamespacedName{Name: name, Namespace: ns}
 }
 
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L238-L238
 func newStatefulSet(cluster *api.CassandraCluster, rackName string) (*appsv1.StatefulSet, error) {
 	pvcLabels := cluster.GetClusterLabels()
 	selectorLabels := cluster.GetClusterLabels()
@@ -85,6 +87,7 @@ func newStatefulSet(cluster *api.CassandraCluster, rackName string) (*appsv1.Sta
 	return statefulSet, nil
 }
 
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L575-L575
 func buildPodTemplateSpec(cluster *api.CassandraCluster, rackName string) (*corev1.PodTemplateSpec, error) {
 	template := &corev1.PodTemplateSpec{}
 
@@ -121,6 +124,7 @@ func buildPodTemplateSpec(cluster *api.CassandraCluster, rackName string) (*core
 	return template, nil
 }
 
+// Source: http://github.com/jsanda/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L466-L466
 func buildContainers(cluster *api.CassandraCluster, serverVolumeMounts []corev1.VolumeMount) ([]corev1.Container, error) {
 	cassandraContainer := corev1.Container{}
 	cassandraContainer.Name = "cassandra"
@@ -175,6 +179,7 @@ func newDataVolumeClaimTemplate(pvcLabels map[string]string) corev1.PersistentVo
 	return pvc
 }
 
+// http://github.com/Orange-OpenSourc/casskop/blob/38affacce767e9e528d4086222c0895df2bf0c3d/pkg/controller/cassandracluster/generator.go#L414-L414
 func generateResourceQuantity(qs string) resource.Quantity {
 	q, _ := resource.ParseQuantity(qs)
 	return q

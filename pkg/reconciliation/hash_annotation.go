@@ -9,6 +9,7 @@ import (
 
 const resourceHashAnnotationKey = "cassandra.datastax.com/resource-hash"
 
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/hash_annotation.go#L20-L20
 func resourcesHaveSameHash(r1, r2 metav1.ObjectMeta) bool {
 	a1 := r1.GetAnnotations()
 	a2 := r2.GetAnnotations()
@@ -18,7 +19,8 @@ func resourcesHaveSameHash(r1, r2 metav1.ObjectMeta) bool {
 	return a1[resourceHashAnnotationKey] == a2[resourceHashAnnotationKey]
 }
 
-func AddHashAnnotation(r metav1.ObjectMeta) {
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/hash_annotation.go#L29-L29
+func addHashAnnotation(r metav1.ObjectMeta) {
 	hash := deepHashString(r)
 	m := r.GetAnnotations()
 	if m == nil {
@@ -28,6 +30,7 @@ func AddHashAnnotation(r metav1.ObjectMeta) {
 	r.SetAnnotations(m)
 }
 
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/hash_annotation.go#L39-L39
 func deepHashString(obj interface{}) string {
 	hasher := sha256.New()
 	hash.DeepHashObject(hasher, obj)

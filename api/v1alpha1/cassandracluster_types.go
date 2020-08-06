@@ -121,6 +121,8 @@ func (c *CassandraCluster) GetConfigBuilderImage() string {
 }
 
 // GetConfigAsJSON gets a JSON-encoded string suitable for passing to configBuilder
+//
+// Source: http://github.com/jsanda/cass-operator/blob/master/operator/pkg/apis/cassandra/v1beta1/cassandradatacenter_types.go#L538-L538
 func (c *CassandraCluster) GetConfigAsJSON() (string, error) {
 	// We use the cluster seed-service name here for the seed list as it will
 	// resolve to the seed nodes. This obviates the need to update the

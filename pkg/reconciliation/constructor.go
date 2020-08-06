@@ -5,6 +5,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L539-L539
 func buildServerConfigInitContainer(cluster *api.CassandraCluster) (*corev1.Container, error) {
 	serverCfg := corev1.Container{}
 	serverCfg.Name = "server-config-init"
@@ -40,6 +41,7 @@ func buildServerConfigInitContainer(cluster *api.CassandraCluster) (*corev1.Cont
 	return &serverCfg, nil
 }
 
+// Source: http://github.com/datastax/cass-operator/blob/master/operator/pkg/reconciliation/constructor.go#L430-L430
 func selectorFromFieldPath(fieldPath string) *corev1.EnvVarSource {
 	return &corev1.EnvVarSource{
 		FieldRef: &corev1.ObjectFieldSelector{
