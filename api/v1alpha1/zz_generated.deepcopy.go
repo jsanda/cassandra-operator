@@ -21,6 +21,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"encoding/json"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -92,6 +93,11 @@ func (in *CassandraClusterSpec) DeepCopyInto(out *CassandraClusterSpec) {
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
+	}
+	if in.Config != nil {
+		in, out := &in.Config, &out.Config
+		*out = make(json.RawMessage, len(*in))
+		copy(*out, *in)
 	}
 }
 

@@ -124,15 +124,23 @@ func buildPodTemplateSpec(cluster *api.CassandraCluster, rackName string) (*core
 func buildContainers(cluster *api.CassandraCluster, serverVolumeMounts []corev1.VolumeMount) ([]corev1.Container, error) {
 	cassandraContainer := corev1.Container{}
 	cassandraContainer.Name = "cassandra"
-	cassandraContainer.Image = "cassandra:3.11.7"
-	cassandraContainer.Resources = corev1.ResourceRequirements{
-		Limits: corev1.ResourceList{
-			"cpu": generateResourceQuantity("2"),
-			"memory": generateResourceQuantity("2Gi"),
-		},
-		Requests: corev1.ResourceList{
-			"cpu": generateResourceQuantity("2"),
-			"memory": generateResourceQuantity("2Gi"),
+	//cassandraContainer.Image = "cassandra:3.11.6"
+	cassandraContainer.Image = "jsanda/cassandra:operator-3.11.6-latest"
+	cassandraContainer.ImagePullPolicy = corev1.PullAlways
+	//cassandraContainer.Resources = corev1.ResourceRequirements{
+	//	Limits: corev1.ResourceList{
+	//		"cpu": generateResourceQuantity("2"),
+	//		"memory": generateResourceQuantity("1Gi"),
+	//	},
+	//	Requests: corev1.ResourceList{
+	//		"cpu": generateResourceQuantity("2"),
+	//		"memory": generateResourceQuantity("1Gi"),
+	//	},
+	//}
+	cassandraContainer.Env = []corev1.EnvVar{
+		{
+			Name:  "CASSANDRA_MAX_HEAP",
+			Value: "512M",
 		},
 	}
 

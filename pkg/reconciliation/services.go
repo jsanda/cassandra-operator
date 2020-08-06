@@ -61,7 +61,11 @@ func newSeedsServiceForCassandraCluster(cluster *api.CassandraCluster) *corev1.S
 	labels := cluster.GetClusterLabels()
 	service.ObjectMeta.Labels = labels
 
-	service.Spec.Selector = buildLabelSelectorForSeedService(cluster)
+	// Commenting out the call to buildLabelSelectorForSeedService for now because we are not
+	// currently applying additional labels to pods other than what is done in the
+	// PodTemplateSpec.
+	//
+	//service.Spec.Selector = buildLabelSelectorForSeedService(cluster)
 	service.Spec.PublishNotReadyAddresses = true
 
 	AddHashAnnotation(service.ObjectMeta)

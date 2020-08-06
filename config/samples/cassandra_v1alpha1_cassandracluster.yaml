@@ -5,3 +5,7 @@ metadata:
 spec:
   # Add fields here
   name: sample
+  config:
+    jvm-options:
+      initial_heap_size: "1024M"
+      max_heap_size: "1024M"

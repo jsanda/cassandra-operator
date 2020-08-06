@@ -36,6 +36,13 @@ spec:
         spec:
           description: CassandraClusterSpec defines the desired state of CassandraCluster
           properties:
+            config:
+              description: RawMessage is a raw encoded JSON value. It implements Marshaler
+                and Unmarshaler and can be used to delay JSON decoding or precompute
+                a JSON encoding.
+              format: byte
+              type: string
+              x-kubernetes-preserve-unknown-fields: true
             datacenters:
               items:
                 properties:

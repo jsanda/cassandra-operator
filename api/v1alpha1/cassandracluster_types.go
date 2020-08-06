@@ -61,6 +61,9 @@ type CassandraClusterSpec struct {
 	Name string `json:"name"`
 
 	Datacenters []Datacenter `json:"datacenters,omitempty"`
+
+	// +kubebuilder:validation:PreserveUnknownFields=true
+	Config json.RawMessage `json:"config,omitempty"`
 }
 
 // CassandraClusterStatus defines the observed state of CassandraCluster
@@ -143,6 +146,17 @@ func (c *CassandraCluster) GetConfigAsJSON() (string, error) {
 	modelParsed, err := gabs.ParseJSON([]byte(modelBytes))
 	if err != nil {
 		return "", errors.Wrap(err, "Model information for CassandraCluster resource was not properly configured")
+	}
+
+	if c.Spec.Config != nil {
+		configParsed, err := gabs.ParseJSON([]byte(c.Spec.Config))
+		if err != nil {
+			return "", errors.Wrap(err, "Error parsing Spec.Config for CassandraCluster resource")
+		}
+
+		if err := modelParsed.Merge(configParsed); err != nil {
+			return "", errors.Wrap(err, "Error merging Spec.Config for CassandraDatacenter resource")
+		}
 	}
 
 	return modelParsed.String(), nil
