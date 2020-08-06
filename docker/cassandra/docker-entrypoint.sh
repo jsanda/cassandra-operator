@@ -9,4 +9,4 @@ fi
 
 mv /tmp/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar $CASSANDRA_HOME/lib
 
-exec /docker-entrypoint.sh
+exec "$@"

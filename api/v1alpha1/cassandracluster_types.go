@@ -132,7 +132,7 @@ func (c *CassandraCluster) GetConfigAsJSON() (string, error) {
 	//broadcast := 0
 	//broadcastSSL := 0
 
-	modelValues := serverconfig.GetModelValues(seeds, c.Spec.Name, c.Spec.Name,)
+	modelValues := serverconfig.GetModelValues(seeds, c.Spec.Name, c.Spec.Name)
 
 	var modelBytes []byte
 
