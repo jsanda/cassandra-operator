@@ -99,6 +99,10 @@ docker-build: #test
 docker-push:
 	docker push ${IMG}
 
+PHONY: e2e-test
+e2e-test:
+	@echo Running e2e tests
+	go test -v ./test/e2e/...
 
 # find or download controller-gen
 # download controller-gen if necessary

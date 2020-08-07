@@ -19,7 +19,9 @@ package v1alpha1
 import (
 	"encoding/json"
 	"github.com/Jeffail/gabs"
-	"github.com/datastax/cass-operator/operator/pkg/serverconfig"
+	"github.com/jsanda/cassandra-operator/pkg/serverconfig"
+
+	//"github.com/datastax/cass-operator/operator/pkg/serverconfig"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -137,12 +139,12 @@ func (c *CassandraCluster) GetConfigAsJSON() (string, error) {
 	// cassandra.yaml whenever the seed nodes change.
 	seeds := []string{c.GetSeedsServiceName()}
 
-	//cql := 0
-	//cqlSSL := 0
-	//broadcast := 0
-	//broadcastSSL := 0
+	cql := 0
+	cqlSSL := 0
+	broadcast := 0
+	broadcastSSL := 0
 
-	modelValues := serverconfig.GetModelValues(seeds, c.Spec.Name, c.Spec.Name)
+	modelValues := serverconfig.GetModelValues(seeds, c.Spec.Name, c.Spec.Name, 0, 0, 0, cql, cqlSSL, broadcast, broadcastSSL)
 
 	var modelBytes []byte
 
